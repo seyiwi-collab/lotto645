@@ -54,8 +54,8 @@ header.top .wrap{display:flex;align-items:center;justify-content:space-between;g
 .tabs button{border:0;background:none;color:var(--ink2);font:inherit;font-weight:600;font-size:14px;padding:6px 12px;border-radius:9px;cursor:pointer;white-space:nowrap}
 .tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(12,12,16,.08),0 0 0 1px var(--line)}
 
-main.wrap{padding-block:26px 72px}
-.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+main.wrap{padding-block:18px 72px}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
 h1{font-size:30px;font-weight:800;letter-spacing:-.035em;margin:0;line-height:1.2;text-wrap:balance}
 h2{font-size:26px;font-weight:800;letter-spacing:-.03em;margin:0 0 6px;line-height:1.25;text-wrap:balance}
 h3{font-size:16px;font-weight:700;letter-spacing:-.02em;margin:36px 0 4px;text-wrap:balance}
@@ -72,17 +72,19 @@ p{margin:6px 0}
 .seg{display:inline-flex;background:var(--fill);border-radius:11px;padding:3px;gap:2px}
 .seg button{border:0;background:transparent;color:var(--ink2);padding:6px 12px;font:inherit;font-size:13.5px;font-weight:600;border-radius:8px;cursor:pointer;white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(12,12,16,.08),0 0 0 1px var(--line)}
-.actions{display:flex;gap:8px;margin-top:14px}
-.go{flex:1;border:0;background:var(--btn);color:var(--btnInk);font:inherit;font-weight:700;font-size:16px;padding:14px 18px;border-radius:14px;cursor:pointer;transition:transform .12s,filter .12s}
+.actions{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:12px}
+.go{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--btn);color:var(--btnInk);font:inherit;font-weight:700;font-size:14px;padding:9px 16px 9px 13px;border-radius:999px;cursor:pointer;
+  box-shadow:0 4px 12px color-mix(in srgb,var(--btn) 32%,transparent),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .12s,filter .12s}
+.go svg{flex:none}
 .go:hover{filter:brightness(1.06)}
 .go:active{transform:scale(.98)}
-.go:disabled{background:var(--fill);color:var(--muted);cursor:not-allowed;transform:none;filter:none}
-.ghost{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:14px;padding:12px 16px;border-radius:14px;cursor:pointer}
+.go:disabled{background:var(--fill);color:var(--muted);cursor:not-allowed;transform:none;filter:none;box-shadow:none}
+.ghost{border:1px solid var(--line);background:var(--surface);color:var(--ink2);font:inherit;font-weight:600;font-size:13px;padding:8px 13px;border-radius:999px;cursor:pointer}
 button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
 /* 게임 줄 */
-.games{display:flex;flex-direction:column;margin-top:6px}
-.game{display:grid;grid-template-columns:18px 1fr;column-gap:12px;row-gap:7px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.games{display:flex;flex-direction:column;margin-top:4px}
+.game{display:grid;grid-template-columns:16px 1fr;column-gap:10px;row-gap:3px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
 .games .game:first-child{border-top:0}
 .tag{font-family:var(--num);font-weight:700;font-size:14px;color:var(--muted)}
 .balls{display:flex;gap:7px;flex-wrap:nowrap}
@@ -95,7 +97,8 @@ button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 @keyframes rise{from{transform:translateY(8px) scale(.85)}to{transform:none}}
 .small .ball{width:26px;height:26px;font-size:12px}
 .small{gap:4px}
-.meta{grid-column:2;display:flex;flex-wrap:wrap;gap:6px}
+.meta{grid-column:2;font-size:11.5px;line-height:1.4;color:var(--muted)}
+.meta b{color:var(--ink2);font-weight:700;font-family:var(--num)}
 .chip{font-size:12px;color:var(--ink2);background:var(--fill);border-radius:7px;padding:2px 8px;white-space:nowrap}
 .chip b{color:var(--ink);font-weight:700;font-family:var(--num)}
 .empty{padding:22px 4px 8px;text-align:center;color:var(--muted);font-size:14px}
@@ -151,7 +154,7 @@ td.l{text-align:left}
   .verdict,.two{grid-template-columns:1fr}
   .ball{width:38px;height:38px;font-size:15.5px}
   .chart text{font-size:14px}
-  h1{font-size:27px}
+  h1{font-size:25px}
 }
 @media (max-width:400px){
   .ball{width:34px;height:34px;font-size:14.5px} .balls{gap:5px}
@@ -192,8 +195,8 @@ td.l{text-align:left}
       </div>
     </div>
     <div class="actions">
-      <button class="go" id="go" type="button">번호 생성하기</button>
       <button class="ghost" id="copy" type="button">복사</button>
+      <button class="go" id="go" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.9L19 9.5l-4.4 3 1.4 5.2L12 14.8 8 17.7l1.4-5.2L5 9.5l5.2-1.6z"/></svg><span>번호 생성하기</span></button>
     </div>
     <div class="games" id="games"></div>
   </div>
@@ -255,8 +258,8 @@ td.l{text-align:left}
       </div>
     </div>
     <div class="actions">
-      <button class="go" id="goSemi" type="button" disabled>번호를 먼저 골라주세요</button>
       <button class="ghost" id="copySemi" type="button">복사</button>
+      <button class="go" id="goSemi" type="button" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.9L19 9.5l-4.4 3 1.4 5.2L12 14.8 8 17.7l1.4-5.2L5 9.5l5.2-1.6z"/></svg><span>번호를 먼저 골라주세요</span></button>
     </div>
     <div class="games" id="gamesSemi"><div class="empty">위에서 번호를 1개 이상 고르면 생성할 수 있어요.</div></div>
   </div>
@@ -363,7 +366,7 @@ function renderGames(el, list, fixed=[]){
     const s=score(c), m=Math.exp(s)/meanExp;
     const bs=`<div class="balls">${c.map((n,j)=>`<span class="ball ${ballCls(n)}${mine.has(n)?' mine':''}" style="--i:${j}">${n}</span>`).join('')}</div>`;
     return `<div class="game"><span class="tag">${'ABCDEFGHIJ'[i]}</span>${bs}
-      <span class="meta"><span class="chip">인기도 하위 <b>${Math.max(1,Math.round(pct(s)*100))}%</b></span><span class="chip">공동당첨 예상 <b>${m.toFixed(2)}배</b></span></span></div>`;
+      <span class="meta">인기도 하위 <b>${Math.max(1,Math.round(pct(s)*100))}%</b> · 공동당첨 예상 <b>${m.toFixed(2)}배</b></span></div>`;
   }).join('');
 }
 
@@ -403,7 +406,7 @@ function syncPicker(){
   $('#pickCount').innerHTML = `고른 번호 <span>${picked.size}</span> / ${MAXPICK}`;
   const go=$('#goSemi');
   go.disabled=!picked.size;
-  go.textContent = picked.size ? `${picked.size}개 고정하고 ${6-picked.size}개 채우기` : '번호를 먼저 골라주세요';
+  go.querySelector('span').textContent = picked.size ? `${picked.size}개 고정하고 ${6-picked.size}개 채우기` : '번호를 먼저 골라주세요';
   if(!picked.size){ state.semi.last=[]; $('#gamesSemi').innerHTML='<div class="empty">위에서 번호를 1개 이상 고르면 생성할 수 있어요.</div>'; }
 }
 $('#picker').onclick=e=>{
