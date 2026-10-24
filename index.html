@@ -3,41 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f7f7f8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0c0c10" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0c0c10">
+<meta name="color-scheme" content="dark">
 <title>로또 6/45 생성기</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&display=swap">
 <style>
-/* 레이아웃: 얇은 선 카드의 단일 컬럼 앱. 색은 파란 포인트 하나 + 로또 공 다섯 색, 숫자는 그로테스크체 */
+/* 레이아웃: 어두운 바탕에 얇은 선 카드의 단일 컬럼 앱(다크 단일 테마). 색은 파란 포인트 하나 + 로또 공 다섯 색, 숫자는 그로테스크체 */
 :root{
-  --page:#f7f7f8; --surface:#ffffff; --ink:#0c0c10; --ink2:#5d606b; --muted:#9a9ca5;
-  --grid:#ededf0; --axis:#d6d7dc; --line:#ebebee; --fill:#f2f2f4;
-  --accent:#3355ff; --accentInk:#ffffff; --accentSoft:#eef1ff; --accentText:#2443e0;
-  --s1:#2a78d6; --s2:#eb6834; --neutral:#c9cad0;
-  --btn:#3355ff; --btnInk:#ffffff; --focus:#3355ff;
-  --font:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
-  --num:"Bricolage Grotesque","Pretendard Variable",Pretendard,system-ui,sans-serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --page:#0c0c10; --surface:#16171c; --ink:#f3f3f6; --ink2:#a9abb5; --muted:#767884;
-    --grid:#24252c; --axis:#33343c; --line:#26272e; --fill:#1f2026;
-    --accent:#6b85ff; --accentInk:#0c0c10; --accentSoft:#1f2440; --accentText:#9aaeff;
-    --s1:#3987e5; --s2:#d95926; --neutral:#44464f;
-    --btn:#6b85ff; --btnInk:#0c0c10; --focus:#6b85ff;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
   --page:#0c0c10; --surface:#16171c; --ink:#f3f3f6; --ink2:#a9abb5; --muted:#767884;
-  --grid:#24252c; --axis:#33343c; --line:#26272e; --fill:#1f2026;
+  --grid:#24252c; --axis:#33343c; --line:#26272e; --fill:#1f2026; --raised:#2e3039;
   --accent:#6b85ff; --accentInk:#0c0c10; --accentSoft:#1f2440; --accentText:#9aaeff;
   --s1:#3987e5; --s2:#d95926; --neutral:#44464f;
   --btn:#6b85ff; --btnInk:#0c0c10; --focus:#6b85ff;
   color-scheme:dark;
+  --font:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+  --num:"Bricolage Grotesque","Pretendard Variable",Pretendard,system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);line-height:1.6;font-size:15px;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
@@ -52,7 +35,7 @@ header.top .wrap{display:flex;align-items:center;justify-content:space-between;g
 .brand i b{width:6px;height:6px;border-radius:50%}
 .tabs{display:flex;background:var(--fill);border-radius:12px;padding:3px;gap:2px}
 .tabs button{border:0;background:none;color:var(--ink2);font:inherit;font-weight:600;font-size:14px;padding:6px 12px;border-radius:9px;cursor:pointer;white-space:nowrap}
-.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(12,12,16,.08),0 0 0 1px var(--line)}
+.tabs button[aria-selected="true"]{background:var(--raised);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.35)}
 
 main.wrap{padding-block:18px 72px}
 .hero{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
@@ -71,7 +54,7 @@ p{margin:6px 0}
 .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
 .seg{display:inline-flex;background:var(--fill);border-radius:11px;padding:3px;gap:2px}
 .seg button{border:0;background:transparent;color:var(--ink2);padding:6px 12px;font:inherit;font-size:13.5px;font-weight:600;border-radius:8px;cursor:pointer;white-space:nowrap}
-.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(12,12,16,.08),0 0 0 1px var(--line)}
+.seg button[aria-pressed="true"]{background:var(--raised);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.35)}
 .actions{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:12px}
 .go{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--btn);color:var(--btnInk);font:inherit;font-weight:700;font-size:14px;padding:9px 16px 9px 13px;border-radius:999px;cursor:pointer;
   box-shadow:0 4px 12px color-mix(in srgb,var(--btn) 32%,transparent),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .12s,filter .12s}
