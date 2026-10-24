@@ -3,81 +3,121 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f6f6f3">
+<meta name="theme-color" content="#f3f5fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12151f" media="(prefers-color-scheme: dark)">
 <title>로또 6/45 생성기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-/* 레이아웃: 상단 고정 탭(생성기 | 분석) + 한 줄 폭 640px 단일 컬럼, 추첨 용지 느낌의 담백한 흑백 바탕에 공 색만 유채색 */
+/* 레이아웃: 추첨기 아이콘이 있는 상단 바 + 알약형 탭, 둥근 카드 한 줄 컬럼. 굵은 표현은 광택 있는 추첨 공 하나에만 쓰고 나머지는 차분한 페리윙클 톤 */
 :root{
-  --page:#f6f6f3; --surface:#ffffff; --ink:#111110; --ink2:#55544f; --muted:#8a8983;
-  --grid:#e4e3dc; --axis:#c6c5bc; --line:#e4e3dc;
-  --s1:#2a78d6; --s2:#eb6834; --neutral:#b9b8b0;
-  --btn:#111110; --btnInk:#ffffff; --focus:#2a78d6;
+  --page:#f3f5fb; --surface:#ffffff; --ink:#1d2333; --ink2:#5a6178; --muted:#8b91a5;
+  --grid:#e6e9f2; --axis:#cdd2e0; --line:#e9ecf4;
+  --accent:#5b6cff; --accent-soft:#e9ecff; --accent-ink:#3b48c9;
+  --s1:#2a78d6; --s2:#eb6834; --neutral:#c4c9d8;
+  --btn:#5b6cff; --btnInk:#ffffff; --focus:#5b6cff;
+  --shadow:0 1px 2px rgba(29,35,51,.05),0 10px 28px rgba(29,35,51,.07);
+  --display:"Jua","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
   --font:"IBM Plex Sans KR","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --page:#0f0f0e; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#8f8e88;
-    --grid:#2c2c2a; --axis:#3d3d3a; --line:#2c2c2a;
-    --s1:#3987e5; --s2:#d95926; --neutral:#5b5a55; --btn:#f0efec; --btnInk:#111110; --focus:#6da7ec;
+    --page:#12151f; --surface:#1b1f2c; --ink:#eef0f7; --ink2:#b4b9cb; --muted:#8a90a3;
+    --grid:#272c3b; --axis:#353b4d; --line:#262b39;
+    --accent:#8b97ff; --accent-soft:#262c4a; --accent-ink:#b9c0ff;
+    --s1:#3987e5; --s2:#d95926; --neutral:#4a5064;
+    --btn:#8b97ff; --btnInk:#12151f; --focus:#8b97ff;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.25);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --page:#0f0f0e; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#8f8e88;
-  --grid:#2c2c2a; --axis:#3d3d3a; --line:#2c2c2a;
-  --s1:#3987e5; --s2:#d95926; --neutral:#5b5a55; --btn:#f0efec; --btnInk:#111110; --focus:#6da7ec;
+  --page:#12151f; --surface:#1b1f2c; --ink:#eef0f7; --ink2:#b4b9cb; --muted:#8a90a3;
+  --grid:#272c3b; --axis:#353b4d; --line:#262b39;
+  --accent:#8b97ff; --accent-soft:#262c4a; --accent-ink:#b9c0ff;
+  --s1:#3987e5; --s2:#d95926; --neutral:#4a5064;
+  --btn:#8b97ff; --btnInk:#12151f; --focus:#8b97ff;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.25);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);line-height:1.6;font-size:15px}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);line-height:1.6;font-size:15px;-webkit-tap-highlight-color:transparent}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--page)}
-.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--page);border-bottom:1px solid var(--line)}
-header.top .wrap{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-block:14px 0}
-.brand{font-weight:700;font-size:17px;letter-spacing:-.02em;padding-bottom:12px}
-.brand small{display:block;font-weight:400;font-size:12px;color:var(--muted);letter-spacing:0}
-.tabs{display:flex;gap:4px}
-.tabs button{border:0;background:none;color:var(--muted);font:inherit;font-weight:600;font-size:15px;padding:8px 10px 12px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
-.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
-main.wrap{padding-block:24px 64px}
-h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em;text-wrap:balance}
-h2{font-size:20px;margin:0 0 6px;letter-spacing:-.01em;text-wrap:balance}
+.wrap{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* 상단 바 */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--page) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none}
+.brand b{display:block;font-family:var(--display);font-weight:400;font-size:20px;line-height:1.1;letter-spacing:-.01em}
+.brand small{display:block;font-size:11.5px;color:var(--muted)}
+.tabs{display:flex;background:var(--surface);border-radius:999px;padding:4px;box-shadow:var(--shadow);flex:none}
+.tabs button{border:0;background:none;color:var(--ink2);font:inherit;font-weight:600;font-size:14px;padding:7px 14px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--btnInk)}
+
+main.wrap{padding-block:12px 64px}
+h1{font-family:var(--display);font-weight:400;font-size:30px;margin:0;letter-spacing:-.01em;line-height:1.2;text-wrap:balance}
+h2{font-family:var(--display);font-weight:400;font-size:26px;margin:8px 0 6px;letter-spacing:-.01em;text-wrap:balance}
 h3{font-size:15px;margin:32px 0 4px;text-wrap:balance}
-.sub{color:var(--ink2);margin:0 0 18px;font-size:14px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.sub{color:var(--ink2);margin:2px 0 18px;font-size:14px}
+.sub b{color:var(--accent-ink);font-weight:600}
+.card{background:var(--surface);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
 .lead{font-size:17px;font-weight:600;margin:4px 0 8px;text-wrap:balance}
 p{margin:6px 0}
 .note{color:var(--ink2);font-size:13px}
-.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
-.seg{display:inline-flex;border:1px solid var(--axis);border-radius:8px;overflow:hidden}
-.seg button{border:0;background:transparent;color:var(--ink2);padding:8px 12px;font:inherit;font-size:14px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
-select{font:inherit;font-size:14px;padding:7px 8px;border:1px solid var(--axis);border-radius:8px;background:var(--surface);color:var(--ink)}
-.actions{display:flex;gap:8px;margin-top:14px}
-.go{flex:1;border:0;background:var(--btn);color:var(--btnInk);font:inherit;font-weight:700;font-size:16px;padding:13px 18px;border-radius:10px;cursor:pointer}
-.ghost{border:1px solid var(--axis);background:transparent;color:var(--ink);font:inherit;font-size:14px;padding:10px 16px;border-radius:10px;cursor:pointer}
+
+/* 컨트롤 */
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+.seg{display:inline-flex;background:var(--page);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--ink2);padding:7px 13px;font:inherit;font-size:13.5px;font-weight:600;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(29,35,51,.12)}
+select{font:inherit;font-size:13.5px;font-weight:600;padding:8px 12px;border:0;border-radius:999px;background:var(--page);color:var(--ink)}
+.actions{display:flex;gap:8px;margin-top:16px}
+.go{flex:1;border:0;background:var(--btn);color:var(--btnInk);font-family:var(--display);font-size:19px;padding:13px 18px;border-radius:999px;cursor:pointer;box-shadow:0 6px 16px color-mix(in srgb,var(--btn) 35%,transparent);transition:transform .15s}
+.go:active{transform:scale(.97)}
+.ghost{border:0;background:var(--accent-soft);color:var(--accent-ink);font:inherit;font-weight:600;font-size:14px;padding:10px 18px;border-radius:999px;cursor:pointer}
 button:focus-visible,select:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.drawinfo{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--ink2);margin-bottom:4px;flex-wrap:wrap}
-.drawinfo b{color:var(--ink);font-family:var(--mono);font-weight:500}
+
+/* 게임 줄 */
 .games{display:flex;flex-direction:column}
-.game{display:grid;grid-template-columns:18px 1fr;column-gap:10px;row-gap:4px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.game{display:grid;grid-template-columns:26px 1fr;column-gap:10px;row-gap:6px;align-items:center;padding:13px 0;border-top:1px dashed var(--line)}
 .game:first-child{border-top:0}
-.tag{font-weight:700;color:var(--muted);font-family:var(--mono)}
+.tag{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--display);font-size:14px}
 .balls{display:flex;gap:6px;flex-wrap:nowrap}
-.ball{width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;
-  text-shadow:0 1px 1px rgba(0,0,0,.35);font-size:15px;font-variant-numeric:tabular-nums}
-.b1{background:#fbc400}.b2{background:#69c8f2}.b3{background:#ff7272}.b4{background:#aaa}.b5{background:#b0d840}
-.small .ball{width:26px;height:26px;font-size:11px}
+.ball{--bc:#aaa;width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--display);font-size:17px;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.28);font-variant-numeric:tabular-nums;
+  background:radial-gradient(circle at 33% 28%,rgba(255,255,255,.9) 0 7%,rgba(255,255,255,0) 32%),var(--bc);
+  box-shadow:inset -3px -4px 7px rgba(0,0,0,.14),0 2px 4px rgba(29,35,51,.12)}
+.b1{--bc:#fbc400}.b2{--bc:#69c8f2}.b3{--bc:#ff7272}.b4{--bc:#aaa}.b5{--bc:#b0d840}
+.games .ball{animation:pop .45s cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(var(--i,0) * 45ms)}
+@keyframes pop{from{transform:scale(.35) translateY(10px)}to{transform:none}}
+.small .ball{width:26px;height:26px;font-size:12px;box-shadow:inset -2px -2px 4px rgba(0,0,0,.14)}
 .small{gap:4px}
-.meta{grid-column:2;color:var(--ink2);font-size:12.5px}
-.meta b{color:var(--ink)}
+.meta{grid-column:2;display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;color:var(--ink2);background:var(--page);border-radius:999px;padding:2px 9px}
+.chip b{color:var(--ink);font-weight:700}
+
+/* 직전 회차·도움말 */
+.stack{display:grid;gap:14px;margin-top:14px}
+.drawinfo{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.drawinfo span{font-family:var(--display);font-size:17px}
+.drawinfo b{color:var(--muted);font-family:var(--mono);font-weight:500;font-size:12.5px}
+.bonus{display:flex;align-items:center;gap:8px;margin-top:8px}
+.help{font-size:12.5px;color:var(--ink2);line-height:1.65}
+.help h4{font-family:var(--display);font-weight:400;font-size:15px;color:var(--ink);margin:0 0 8px}
+.help dl{margin:0;display:grid;gap:10px}
+.help dt{font-weight:700;color:var(--ink)}
+.help dd{margin:2px 0 0}
+.help dt .chip{margin-left:0}
+
+/* 분석 탭 공통 */
 .verdict{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
 .verdict .card{padding:16px}
 .verdict .k{font-size:13px;color:var(--ink2)}
-.verdict .v{font-size:18px;font-weight:700;margin:2px 0}
+.verdict .v{font-family:var(--display);font-size:22px;margin:2px 0}
 table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
 th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 th{color:var(--ink2);font-weight:600;font-size:13px}
@@ -88,24 +128,32 @@ td.l{text-align:left}
 .chart svg{display:block;width:100%;height:auto;overflow:visible}
 .chart text{fill:var(--muted);font-size:11px}
 .legend{display:flex;gap:16px;font-size:13px;color:var(--ink2);margin-top:6px;flex-wrap:wrap}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .two>div{min-width:0}
-.howto{margin-top:20px;display:grid;gap:8px}
-#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:12px;padding:6px 8px;border-radius:6px;opacity:0;transition:opacity .1s;z-index:9;white-space:nowrap}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:12px;padding:6px 9px;border-radius:8px;opacity:0;transition:opacity .1s;z-index:9;white-space:nowrap}
 @media (max-width:560px){
   .verdict,.two{grid-template-columns:1fr}
-  .ball{width:36px;height:36px;font-size:14px}
+  .ball{width:37px;height:37px;font-size:16px}
   .chart text{font-size:14px}
+  .brand small{display:none}
 }
-@media (max-width:380px){ .ball{width:32px;height:32px;font-size:13px} .balls{gap:5px} }
-@media (prefers-reduced-motion:reduce){ #tip{transition:none} }
+@media (max-width:380px){ .ball{width:33px;height:33px;font-size:15px} .balls{gap:5px} .tabs button{padding:7px 11px} }
+@media (prefers-reduced-motion:reduce){ .games .ball{animation:none} .go,.tabs button,.seg button,#tip{transition:none} }
 </style>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
-    <div class="brand">로또 6/45 생성기<small id="brandSub"></small></div>
+    <div class="brand">
+      <svg width="34" height="38" viewBox="0 0 34 38" aria-hidden="true">
+        <circle cx="17" cy="15" r="14" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+        <circle cx="11" cy="19" r="4" fill="#fbc400"/><circle cx="19" cy="21" r="4" fill="#ff7272"/>
+        <circle cx="23" cy="13" r="4" fill="#69c8f2"/><circle cx="14" cy="10" r="3.5" fill="#b0d840"/>
+        <path d="M9 30h16l2 6H7z" fill="var(--accent)"/>
+      </svg>
+      <div><b>로또 6/45 생성기</b><small id="brandSub"></small></div>
+    </div>
     <nav class="tabs" role="tablist" aria-label="화면">
       <button role="tab" id="tab-gen" aria-controls="gen" aria-selected="true" type="button">생성기</button>
       <button role="tab" id="tab-why" aria-controls="why" aria-selected="false" type="button">분석</button>
@@ -133,11 +181,32 @@ td.l{text-align:left}
       <button class="ghost" id="copy" type="button">복사</button>
     </div>
   </div>
-  <p class="note" id="modeNote" style="margin-top:14px"></p>
-  <div class="card howto">
-    <div class="drawinfo"><span>직전 회차</span><b id="lastEp"></b></div>
-    <div id="lastBalls"></div>
-    <p class="note" id="lastNote"></p>
+  <p class="note" id="modeNote" style="margin:14px 4px 0"></p>
+
+  <div class="stack">
+    <div class="card">
+      <div class="drawinfo"><span>직전 회차 당첨번호</span><b id="lastEp"></b></div>
+      <div id="lastBalls"></div>
+      <p class="note" id="lastNote" style="margin-top:10px"></p>
+    </div>
+
+    <div class="card help">
+      <h4>번호 읽는 법</h4>
+      <dl>
+        <div>
+          <dt>A · B · C · D · E</dt>
+          <dd>로또 용지 한 장의 게임 칸(A~E)과 같은 이름입니다. 한 줄이 1,000원짜리 1게임이고, 다섯 줄은 서로 다른 조합일 뿐 순서나 등급 차이는 없습니다. A가 더 좋은 번호라는 뜻이 아닙니다.</dd>
+        </div>
+        <div>
+          <dt><span class="chip">공동당첨 예상 <b>0.93배</b></span></dt>
+          <dd>이 조합으로 1등이 됐을 때, 같은 번호로 함께 1등이 될 사람이 평균적인 조합보다 몇 배일지 추정한 값입니다. 0.93배면 나눠 가질 사람이 평균보다 약 7% 적어서, 1인당 받는 금액이 약 8% 많아집니다. 1등이 될 확률은 어떤 조합이든 1/8,145,060으로 같습니다.</dd>
+        </div>
+        <div>
+          <dt><span class="chip">인기도 하위 <b>12%</b></span></dt>
+          <dd>무작위 조합 10만 개와 비교했을 때 사람들이 덜 고르는 쪽 몇 % 안에 드는지입니다. 숫자가 작을수록 남들과 겹칠 가능성이 낮습니다. 비인기 조합 모드는 하위 20% 안의 조합만 보여줍니다.</dd>
+        </div>
+      </dl>
+    </div>
   </div>
 </section>
 
@@ -186,7 +255,7 @@ const fmt = n => n.toLocaleString('ko-KR');
 const eok = n => (n/1e8).toFixed(1)+'억';
 const ymd = s => `${s.slice(0,4)}.${s.slice(4,6)}.${s.slice(6)}`;
 const ballCls = n => 'b'+(n<=10?1:n<=20?2:n<=30?3:n<=40?4:5);
-const balls = (arr, small) => `<div class="balls${small?' small':''}">${arr.map(n=>`<span class="ball ${ballCls(n)}">${n}</span>`).join('')}</div>`;
+const balls = (arr, small) => `<div class="balls${small?' small':''}">${arr.map((n,i)=>`<span class="ball ${ballCls(n)}" style="--i:${i}">${n}</span>`).join('')}</div>`;
 
 /* ---------- 생성기 ---------- */
 const PAST = new Set(D.past);
@@ -216,7 +285,7 @@ function generate(){
   $('#games').innerHTML = out.map((c,i)=>{
     const s=score(c), m=Math.exp(s)/meanExp;
     return `<div class="game"><span class="tag">${'ABCDEFGHIJ'[i]}</span>${balls(c)}
-      <span class="meta">인기도 하위 <b>${Math.max(1,Math.round(pct(s)*100))}%</b> · 공동당첨 예상 <b>${m.toFixed(2)}배</b></span></div>`;
+      <span class="meta"><span class="chip">인기도 하위 <b>${Math.max(1,Math.round(pct(s)*100))}%</b></span><span class="chip">공동당첨 예상 <b>${m.toFixed(2)}배</b></span></span></div>`;
   }).join('');
 }
 document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
@@ -308,7 +377,7 @@ const L=D.last;
 $('#sub').innerHTML=`${D.next_ep}회 · ${D.next_date.replaceAll('-','.')}(토) 추첨`;
 $('#brandSub').textContent=`1~${D.N}회 분석 반영`;
 $('#lastEp').textContent=`${L.ep}회 · ${ymd(L.date)}`;
-$('#lastBalls').innerHTML=balls(L.nums)+`<div class="note" style="margin-top:6px">보너스 ${L.bonus}</div>`;
+$('#lastBalls').innerHTML=balls(L.nums)+`<div class="bonus note">보너스 ${balls([L.bonus],true)}</div>`;
 $('#lastNote').innerHTML=`1등 ${L.w}명 · 1인당 ${eok(L.amt)} (자동 ${L.auto} · 수동 ${L.manual} · 반자동 ${L.semi})`;
 const fmin=Math.min(...D.freq), fmax=Math.max(...D.freq);
 $('#v1').textContent=`45개 번호 출현 횟수 차이는 무작위 오차 범위(p=${D.chi_p}). 핫·콜드 번호 전략도 랜덤과 같은 0.8개 적중.`;
