@@ -3,166 +3,171 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#13294b">
+<meta name="theme-color" content="#f7f7f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0c10" media="(prefers-color-scheme: dark)">
 <title>로또 6/45 생성기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bungee&family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&display=swap">
 <style>
-/* 레이아웃: 별무늬 네이비 간판 헤더 + 절취선이 있는 복권 티켓 카드. 영문은 간판체(로고)와 컨덴스드(숫자·라벨), 한글 제목은 포스터체 */
+/* 레이아웃: 얇은 선 카드의 단일 컬럼 앱. 색은 파란 포인트 하나 + 로또 공 다섯 색, 숫자는 그로테스크체 */
 :root{
-  --page:#eef1f6; --surface:#ffffff; --ink:#13294b; --ink2:#4d5b75; --muted:#8792a6;
-  --grid:#e3e7ef; --axis:#c9d0dc; --line:#dfe4ec;
-  --navy:#13294b; --navyInk:#ffffff; --red:#d62839; --redInk:#ffffff; --gold:#f2b705;
-  --s1:#2a78d6; --s2:#eb6834; --neutral:#c2c9d6;
-  --btn:#d62839; --btnInk:#ffffff; --focus:#2a78d6; --num:#13294b;
-  --shadow:0 1px 2px rgba(19,41,75,.06),0 12px 30px rgba(19,41,75,.10);
-  --logo:"Bungee","Black Han Sans",system-ui,sans-serif;
-  --cond:"Anton","Black Han Sans","Arial Narrow",sans-serif;
-  --display:"Black Han Sans","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
-  --font:"IBM Plex Sans KR","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+  --page:#f7f7f8; --surface:#ffffff; --ink:#0c0c10; --ink2:#5d606b; --muted:#9a9ca5;
+  --grid:#ededf0; --axis:#d6d7dc; --line:#ebebee; --fill:#f2f2f4;
+  --accent:#3355ff; --accentInk:#ffffff; --accentSoft:#eef1ff; --accentText:#2443e0;
+  --s1:#2a78d6; --s2:#eb6834; --neutral:#c9cad0;
+  --btn:#3355ff; --btnInk:#ffffff; --focus:#3355ff;
+  --font:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+  --num:"Bricolage Grotesque","Pretendard Variable",Pretendard,system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --page:#0a1426; --surface:#13223d; --ink:#f2f4f8; --ink2:#b7c0d2; --muted:#8792a6;
-    --grid:#1f3050; --axis:#2c3f63; --line:#22355a;
-    --navy:#0d1d38; --navyInk:#ffffff; --red:#ef4454; --redInk:#ffffff; --gold:#f7c531;
-    --s1:#3987e5; --s2:#d95926; --neutral:#3d4d6b;
-    --btn:#ef4454; --btnInk:#ffffff; --focus:#6da7ec; --num:#13294b;
-    --shadow:0 1px 2px rgba(0,0,0,.35),0 12px 30px rgba(0,0,0,.3);
+    --page:#0c0c10; --surface:#16171c; --ink:#f3f3f6; --ink2:#a9abb5; --muted:#767884;
+    --grid:#24252c; --axis:#33343c; --line:#26272e; --fill:#1f2026;
+    --accent:#6b85ff; --accentInk:#0c0c10; --accentSoft:#1f2440; --accentText:#9aaeff;
+    --s1:#3987e5; --s2:#d95926; --neutral:#44464f;
+    --btn:#6b85ff; --btnInk:#0c0c10; --focus:#6b85ff;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --page:#0a1426; --surface:#13223d; --ink:#f2f4f8; --ink2:#b7c0d2; --muted:#8792a6;
-  --grid:#1f3050; --axis:#2c3f63; --line:#22355a;
-  --navy:#0d1d38; --navyInk:#ffffff; --red:#ef4454; --redInk:#ffffff; --gold:#f7c531;
-  --s1:#3987e5; --s2:#d95926; --neutral:#3d4d6b;
-  --btn:#ef4454; --btnInk:#ffffff; --focus:#6da7ec; --num:#13294b;
-  --shadow:0 1px 2px rgba(0,0,0,.35),0 12px 30px rgba(0,0,0,.3);
+  --page:#0c0c10; --surface:#16171c; --ink:#f3f3f6; --ink2:#a9abb5; --muted:#767884;
+  --grid:#24252c; --axis:#33343c; --line:#26272e; --fill:#1f2026;
+  --accent:#6b85ff; --accentInk:#0c0c10; --accentSoft:#1f2440; --accentText:#9aaeff;
+  --s1:#3987e5; --s2:#d95926; --neutral:#44464f;
+  --btn:#6b85ff; --btnInk:#0c0c10; --focus:#6b85ff;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);line-height:1.6;font-size:15px;-webkit-tap-highlight-color:transparent}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
-.wrap{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);line-height:1.6;font-size:15px;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--page)}
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
-/* 간판 헤더 */
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;color:var(--navyInk);
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cpath d='M11 3l2 5.6h5.9l-4.8 3.5 1.8 5.6L11 14.2 6.1 17.7l1.8-5.6L3.1 8.6H9z' fill='%23ffffff' fill-opacity='.07'/%3E%3Cpath d='M33 25l2 5.6h5.9l-4.8 3.5 1.8 5.6L33 36.2l-4.9 3.5 1.8-5.6-4.8-3.5H31z' fill='%23ffffff' fill-opacity='.07'/%3E%3C/svg%3E"),var(--navy);
-  border-bottom:4px solid var(--red);box-shadow:0 3px 0 var(--surface)}
-header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
-.brand{min-width:0;line-height:1}
-.brand b{display:block;font-family:var(--logo);font-weight:400;font-size:22px;letter-spacing:.01em}
-.brand b span{color:var(--gold)}
-.brand small{display:block;font-family:var(--cond);font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.65);margin-top:5px}
-.tabs{display:flex;gap:4px;background:rgba(255,255,255,.1);border-radius:999px;padding:4px;flex:none}
-.tabs button{border:0;background:none;color:rgba(255,255,255,.75);font:inherit;font-weight:700;font-size:14px;padding:6px 14px;border-radius:999px;cursor:pointer}
-.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink)}
-header.top .tabs button[aria-selected="true"]{background:#ffffff;color:#13294b}
+/* 헤더 */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--page) 85%,transparent);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:10px}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--num);font-weight:800;font-size:18px;letter-spacing:-.03em;white-space:nowrap}
+.brand i{display:grid;grid-template-columns:repeat(3,6px);gap:2px}
+.brand i b{width:6px;height:6px;border-radius:50%}
+.tabs{display:flex;background:var(--fill);border-radius:12px;padding:3px;gap:2px}
+.tabs button{border:0;background:none;color:var(--ink2);font:inherit;font-weight:600;font-size:14px;padding:6px 12px;border-radius:9px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(12,12,16,.08),0 0 0 1px var(--line)}
 
-main.wrap{padding-block:22px 64px}
-.eyebrow{font-family:var(--cond);font-size:14px;letter-spacing:.14em;color:var(--red);margin:0}
-h1{font-family:var(--display);font-weight:400;font-size:32px;margin:2px 0 0;line-height:1.15;text-wrap:balance}
-h2{font-family:var(--display);font-weight:400;font-size:27px;margin:4px 0 6px;text-wrap:balance}
-h3{font-size:15px;margin:32px 0 4px;text-wrap:balance}
-.sub{color:var(--ink2);margin:4px 0 18px;font-size:14px}
-.card{background:var(--surface);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
-.lead{font-size:17px;font-weight:600;margin:4px 0 8px;text-wrap:balance}
+main.wrap{padding-block:26px 72px}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+h1{font-size:30px;font-weight:800;letter-spacing:-.035em;margin:0;line-height:1.2;text-wrap:balance}
+h2{font-size:26px;font-weight:800;letter-spacing:-.03em;margin:0 0 6px;line-height:1.25;text-wrap:balance}
+h3{font-size:16px;font-weight:700;letter-spacing:-.02em;margin:36px 0 4px;text-wrap:balance}
+.sub{color:var(--ink2);margin:4px 0 0;font-size:14px}
+.dday{font-family:var(--num);font-weight:700;font-size:13px;color:var(--accentText);background:var(--accentSoft);border-radius:999px;padding:5px 11px;white-space:nowrap}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px}
+.lead{font-size:17px;font-weight:700;margin:4px 0 8px;letter-spacing:-.02em;text-wrap:balance}
 p{margin:6px 0}
-.note{color:var(--ink2);font-size:13px}
+.note{color:var(--ink2);font-size:13px;line-height:1.65}
+.label{font-size:12px;font-weight:600;color:var(--muted);margin:0 0 8px}
 
-/* 티켓 */
-.ticket{position:relative;overflow:hidden;padding-top:24px}
-.ticket::before{content:"";position:absolute;inset:0 0 auto;height:8px;background:linear-gradient(90deg,var(--red) 0 33.3%,var(--surface) 33.3% 66.6%,var(--navy) 66.6%);border-bottom:1px solid var(--line)}
-.ticket-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.ticket-head span{font-family:var(--cond);font-size:20px;letter-spacing:.06em;color:var(--ink)}
-.ticket-head small{font-family:var(--cond);font-size:12px;letter-spacing:.12em;color:var(--muted)}
-.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.seg{display:inline-flex;border:2px solid var(--ink);border-radius:999px;overflow:hidden}
-.seg button{border:0;background:transparent;color:var(--ink);padding:6px 13px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
-select{font:inherit;font-size:13.5px;font-weight:700;padding:7px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--surface);color:var(--ink)}
-.actions{display:flex;gap:8px;margin:14px 0 2px}
-.go{flex:1;border:0;background:var(--btn);color:var(--btnInk);font-family:var(--cond);font-size:21px;letter-spacing:.06em;padding:12px 18px;border-radius:12px;cursor:pointer;
-  box-shadow:0 4px 0 color-mix(in srgb,var(--btn) 60%,#000);transition:transform .1s,box-shadow .1s}
-.go small{font-family:var(--font);font-weight:700;font-size:14px;letter-spacing:0;margin-left:8px;opacity:.9}
-.go:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--btn) 60%,#000)}
-.ghost{border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:var(--cond);font-size:17px;letter-spacing:.06em;padding:8px 16px;border-radius:12px;cursor:pointer}
-button:focus-visible,select:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-.perf{position:relative;border-top:2px dashed var(--line);margin:18px -18px 4px}
-.perf::before,.perf::after{content:"";position:absolute;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--page)}
-.perf::before{left:-11px}.perf::after{right:-11px}
+/* 컨트롤 */
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.seg{display:inline-flex;background:var(--fill);border-radius:11px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;color:var(--ink2);padding:6px 12px;font:inherit;font-size:13.5px;font-weight:600;border-radius:8px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(12,12,16,.08),0 0 0 1px var(--line)}
+.actions{display:flex;gap:8px;margin-top:14px}
+.go{flex:1;border:0;background:var(--btn);color:var(--btnInk);font:inherit;font-weight:700;font-size:16px;padding:14px 18px;border-radius:14px;cursor:pointer;transition:transform .12s,filter .12s}
+.go:hover{filter:brightness(1.06)}
+.go:active{transform:scale(.98)}
+.go:disabled{background:var(--fill);color:var(--muted);cursor:not-allowed;transform:none;filter:none}
+.ghost{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:14px;padding:12px 16px;border-radius:14px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
 /* 게임 줄 */
-.games{display:flex;flex-direction:column}
-.game{display:grid;grid-template-columns:24px 1fr;column-gap:10px;row-gap:6px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
-.game:first-child{border-top:0}
-.tag{font-family:var(--logo);font-size:18px;color:var(--red);text-align:center}
-.balls{display:flex;gap:6px;flex-wrap:nowrap}
-.ball{--bc:#aaa;width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;
-  font-family:var(--cond);font-size:17px;color:var(--num);font-variant-numeric:tabular-nums;
-  background:radial-gradient(circle,#fff 0 44%,rgba(0,0,0,.12) 45%,transparent 47%),
-             radial-gradient(circle at 30% 25%,rgba(255,255,255,.75) 0 6%,rgba(255,255,255,0) 30%),var(--bc);
-  box-shadow:inset -3px -4px 7px rgba(0,0,0,.18),0 2px 4px rgba(19,41,75,.18)}
-.b1{--bc:#fbc400}.b2{--bc:#4fb6e8}.b3{--bc:#f25c5c}.b4{--bc:#9aa0a8}.b5{--bc:#8fc93a}
-.games .ball{animation:roll .5s cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(var(--i,0) * 50ms)}
-@keyframes roll{from{transform:translateX(-14px) rotate(-180deg) scale(.6)}to{transform:none}}
-.small .ball{width:27px;height:27px;font-size:12.5px;box-shadow:inset -2px -2px 4px rgba(0,0,0,.18)}
+.games{display:flex;flex-direction:column;margin-top:6px}
+.game{display:grid;grid-template-columns:18px 1fr;column-gap:12px;row-gap:7px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.games .game:first-child{border-top:0}
+.tag{font-family:var(--num);font-weight:700;font-size:14px;color:var(--muted)}
+.balls{display:flex;gap:7px;flex-wrap:nowrap}
+.ball{--bc:#8d939e;width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--num);font-weight:700;font-size:16px;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+  background:var(--bc);box-shadow:inset 0 -2px 0 rgba(0,0,0,.12)}
+.b1{--bc:#f5b400}.b2{--bc:#3b9ef0}.b3{--bc:#f0555a}.b4{--bc:#8d939e}.b5{--bc:#62bb47}
+.ball.mine{box-shadow:inset 0 -2px 0 rgba(0,0,0,.12),0 0 0 2px var(--surface),0 0 0 4px var(--ink)}
+.games .ball{animation:rise .42s cubic-bezier(.2,.9,.3,1.2) both;animation-delay:calc(var(--i,0) * 40ms)}
+@keyframes rise{from{transform:translateY(8px) scale(.85)}to{transform:none}}
+.small .ball{width:26px;height:26px;font-size:12px}
 .small{gap:4px}
 .meta{grid-column:2;display:flex;flex-wrap:wrap;gap:6px}
-.chip{font-size:12px;color:var(--ink2);border:1px solid var(--line);border-radius:6px;padding:1px 8px;background:var(--surface)}
-.chip b{color:var(--ink);font-weight:700}
+.chip{font-size:12px;color:var(--ink2);background:var(--fill);border-radius:7px;padding:2px 8px;white-space:nowrap}
+.chip b{color:var(--ink);font-weight:700;font-family:var(--num)}
+.empty{padding:22px 4px 8px;text-align:center;color:var(--muted);font-size:14px}
+
+/* 반자동 번호판 */
+.picker{display:grid;grid-template-columns:repeat(7,minmax(0,46px));justify-content:space-between;row-gap:10px;column-gap:6px;margin-top:4px}
+.pk{aspect-ratio:1;max-width:100%;border-radius:50%;border:1.5px solid var(--axis);background:var(--surface);color:var(--ink);
+  font-family:var(--num);font-weight:700;font-size:15px;cursor:pointer;padding:0;transition:transform .1s,background .15s,border-color .15s}
+.pk:active{transform:scale(.92)}
+.pk[aria-pressed="true"]{background:var(--bc);border-color:var(--bc);color:#fff}
+.pk.off{opacity:.35}
+.pickbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.count{font-family:var(--num);font-weight:700;font-size:15px}
+.count span{color:var(--accentText)}
+.linkbtn{border:0;background:none;color:var(--ink2);font:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:4px 2px;text-decoration:underline;text-underline-offset:3px}
+.mykey{display:inline-flex;align-items:center;gap:6px}
+.mykey i{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink)}
 
 /* 직전 회차·도움말 */
-.stack{display:grid;gap:14px;margin-top:16px}
-.drawinfo{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.drawinfo span{font-family:var(--cond);font-size:19px;letter-spacing:.06em}
-.drawinfo b{color:var(--muted);font-family:var(--cond);font-weight:400;font-size:13px;letter-spacing:.1em}
-.bonus{display:flex;align-items:center;gap:8px;margin-top:8px}
-.help{font-size:12.5px;color:var(--ink2);line-height:1.65}
-.help h4{font-family:var(--cond);font-weight:400;font-size:18px;letter-spacing:.06em;color:var(--ink);margin:0 0 10px}
-.help h4 small{font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:0;margin-left:6px;color:var(--ink2)}
-.help dl{margin:0;display:grid;gap:12px}
-.help dt{font-weight:700;color:var(--ink)}
+.stack{display:grid;gap:12px;margin-top:14px}
+.drawinfo{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.drawinfo span{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.drawinfo b{color:var(--muted);font-family:var(--num);font-weight:600;font-size:13px}
+.lastrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.plus{color:var(--muted);font-weight:700}
+.help{font-size:13px;color:var(--ink2);line-height:1.7}
+.help h4{font-size:15px;font-weight:700;color:var(--ink);margin:0 0 12px;letter-spacing:-.02em}
+.help dl{margin:0;display:grid;gap:14px}
+.help dt{font-weight:700;color:var(--ink);font-size:13.5px}
 .help dd{margin:3px 0 0}
 
 /* 분석 탭 */
-.verdict{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.verdict{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
 .verdict .card{padding:16px}
-.verdict .card:first-child{border-top:5px solid var(--navy)}
-.verdict .card:last-child{border-top:5px solid var(--red)}
-.verdict .k{font-size:13px;color:var(--ink2)}
-.verdict .v{font-family:var(--display);font-size:23px;margin:2px 0}
+.verdict .k{font-size:12.5px;color:var(--muted);font-weight:600}
+.verdict .v{font-size:21px;font-weight:800;letter-spacing:-.03em;margin:2px 0 4px}
+.verdict .card:last-child .v{color:var(--accentText)}
 table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
-th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
-th{color:var(--ink2);font-weight:600;font-size:13px}
+th,td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:12.5px}
 th:first-child,td:first-child{text-align:left}
 td.l{text-align:left}
 .scroll{overflow-x:auto}
-.chart{position:relative;margin-top:8px;min-width:0}
+.chart{position:relative;margin-top:10px;min-width:0}
 .chart svg{display:block;width:100%;height:auto;overflow:visible}
-.chart text{fill:var(--muted);font-size:11px}
-.legend{display:flex;gap:16px;font-size:13px;color:var(--ink2);margin-top:6px;flex-wrap:wrap}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.chart text{fill:var(--muted);font-size:11px;font-family:var(--num)}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--ink2);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .two>div{min-width:0}
-#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:12px;padding:6px 9px;border-radius:6px;opacity:0;transition:opacity .1s;z-index:9;white-space:nowrap}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--page);font-size:12px;padding:6px 9px;border-radius:8px;opacity:0;transition:opacity .1s;z-index:9;white-space:nowrap}
 @media (max-width:560px){
   .verdict,.two{grid-template-columns:1fr}
-  .ball{width:37px;height:37px;font-size:16px}
+  .ball{width:38px;height:38px;font-size:15.5px}
   .chart text{font-size:14px}
+  h1{font-size:27px}
 }
-@media (max-width:380px){ .ball{width:33px;height:33px;font-size:15px} .balls{gap:5px} .tabs button{padding:6px 11px} .brand b{font-size:19px} }
-@media (prefers-reduced-motion:reduce){ .games .ball{animation:none} .go,#tip{transition:none} }
+@media (max-width:400px){
+  .ball{width:34px;height:34px;font-size:14.5px} .balls{gap:5px}
+  .tabs button{padding:6px 9px;font-size:13.5px} .brand{font-size:16px} .brand i{display:none}
+  .picker{gap:6px} .pk{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){ .games .ball{animation:none} .go,.pk,#tip{transition:none} }
 </style>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
-    <div class="brand"><b>LOTTO <span>6/45</span></b><small id="brandSub"></small></div>
+    <div class="brand"><i aria-hidden="true"><b style="background:#f5b400"></b><b style="background:#3b9ef0"></b><b style="background:#f0555a"></b><b style="background:#8d939e"></b><b style="background:#62bb47"></b><b style="background:var(--accent)"></b></i>lotto 6/45</div>
     <nav class="tabs" role="tablist" aria-label="화면">
-      <button role="tab" id="tab-gen" aria-controls="gen" aria-selected="true" type="button">생성기</button>
+      <button role="tab" id="tab-gen" aria-controls="gen" aria-selected="true" type="button">자동</button>
+      <button role="tab" id="tab-semi" aria-controls="semi" aria-selected="false" type="button">반자동</button>
       <button role="tab" id="tab-why" aria-controls="why" aria-selected="false" type="button">분석</button>
     </nav>
   </div>
@@ -170,38 +175,39 @@ td.l{text-align:left}
 
 <main class="wrap">
 <section id="gen" role="tabpanel" aria-labelledby="tab-gen">
-  <p class="eyebrow" id="eyebrow"></p>
-  <h1>이번 주 번호</h1>
-  <p class="sub" id="sub"></p>
-  <div class="card ticket">
-    <div class="ticket-head"><span>LUCKY PICKS</span><small id="ticketNo"></small></div>
+  <div class="hero">
+    <div><h1>이번 주 번호</h1><p class="sub" id="sub"></p></div>
+    <span class="dday" id="dday"></span>
+  </div>
+  <div class="card">
     <div class="controls">
-      <div class="seg" role="group" aria-label="생성 방식">
-        <button type="button" data-mode="smart" aria-pressed="true">비인기 조합</button>
-        <button type="button" data-mode="random" aria-pressed="false">완전 랜덤</button>
+      <div class="seg" role="group" aria-label="생성 방식" data-group="mode" data-scope="gen">
+        <button type="button" data-v="smart" aria-pressed="true">비인기 조합</button>
+        <button type="button" data-v="random" aria-pressed="false">완전 랜덤</button>
       </div>
-      <select id="cnt" aria-label="게임 수">
-        <option value="1">1게임</option><option value="5" selected>5게임</option><option value="10">10게임</option>
-      </select>
+      <div class="seg" role="group" aria-label="게임 수" data-group="cnt" data-scope="gen">
+        <button type="button" data-v="1" aria-pressed="false">1</button>
+        <button type="button" data-v="5" aria-pressed="true">5</button>
+        <button type="button" data-v="10" aria-pressed="false">10게임</button>
+      </div>
     </div>
     <div class="actions">
-      <button class="go" id="go" type="button">GENERATE<small>번호 생성하기</small></button>
-      <button class="ghost" id="copy" type="button">COPY</button>
+      <button class="go" id="go" type="button">번호 생성하기</button>
+      <button class="ghost" id="copy" type="button">복사</button>
     </div>
-    <div class="perf" aria-hidden="true"></div>
     <div class="games" id="games"></div>
   </div>
   <p class="note" id="modeNote" style="margin:14px 4px 0"></p>
 
   <div class="stack">
     <div class="card">
-      <div class="drawinfo"><span>LAST DRAW · 직전 회차</span><b id="lastEp"></b></div>
-      <div id="lastBalls"></div>
-      <p class="note" id="lastNote" style="margin-top:10px"></p>
+      <div class="drawinfo"><span>직전 회차 당첨번호</span><b id="lastEp"></b></div>
+      <div class="lastrow" id="lastBalls"></div>
+      <p class="note" id="lastNote" style="margin-top:12px"></p>
     </div>
 
     <div class="card help">
-      <h4>HOW TO READ<small>번호 읽는 법</small></h4>
+      <h4>번호 읽는 법</h4>
       <dl>
         <div>
           <dt>A · B · C · D · E</dt>
@@ -215,9 +221,46 @@ td.l{text-align:left}
           <dt><span class="chip">인기도 하위 <b>12%</b></span></dt>
           <dd>무작위 조합 10만 개와 비교했을 때 사람들이 덜 고르는 쪽 몇 % 안에 드는지입니다. 숫자가 작을수록 남들과 겹칠 가능성이 낮습니다. 비인기 조합 모드는 하위 20% 안의 조합만 보여줍니다.</dd>
         </div>
+        <div>
+          <dt>반자동</dt>
+          <dd>원하는 번호를 1~5개 직접 고르고 나머지만 자동으로 채우는 방식입니다. 동행복권 용지의 반자동과 같습니다.</dd>
+        </div>
       </dl>
     </div>
   </div>
+</section>
+
+<section id="semi" role="tabpanel" aria-labelledby="tab-semi" hidden>
+  <div class="hero">
+    <div><h1>반자동</h1><p class="sub">꼭 넣고 싶은 번호를 1~5개 고르면 나머지를 채워드려요.</p></div>
+  </div>
+  <div class="card">
+    <div class="pickbar">
+      <span class="count" id="pickCount"></span>
+      <button class="linkbtn" id="pickReset" type="button">선택 초기화</button>
+    </div>
+    <div class="picker" id="picker" role="group" aria-label="고정할 번호"></div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="controls">
+      <div class="seg" role="group" aria-label="채우는 방식" data-group="mode" data-scope="semi">
+        <button type="button" data-v="smart" aria-pressed="true">비인기 조합</button>
+        <button type="button" data-v="random" aria-pressed="false">완전 랜덤</button>
+      </div>
+      <div class="seg" role="group" aria-label="게임 수" data-group="cnt" data-scope="semi">
+        <button type="button" data-v="1" aria-pressed="false">1</button>
+        <button type="button" data-v="5" aria-pressed="true">5</button>
+        <button type="button" data-v="10" aria-pressed="false">10게임</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="go" id="goSemi" type="button" disabled>번호를 먼저 골라주세요</button>
+      <button class="ghost" id="copySemi" type="button">복사</button>
+    </div>
+    <div class="games" id="gamesSemi"><div class="empty">위에서 번호를 1개 이상 고르면 생성할 수 있어요.</div></div>
+  </div>
+  <p class="note" style="margin:14px 4px 0"><span class="mykey"><i></i>테두리가 있는 공이 직접 고른 번호입니다.</span> 비인기 조합 모드는 고른 번호를 넣은 조합 중에서 사람들이 덜 고르는 하위 20%로 나머지를 채웁니다. 고른 번호 자체가 인기 번호라면 공동당첨 예상 배수가 1배보다 높게 나올 수 있습니다.</p>
 </section>
 
 <section id="why" role="tabpanel" aria-labelledby="tab-why" hidden>
@@ -270,59 +313,128 @@ const balls = (arr, small) => `<div class="balls${small?' small':''}">${arr.map(
 /* ---------- 생성기 ---------- */
 const PAST = new Set(D.past);
 const runPen = Math.max(0, D.run_pen);
+const ALL = [...Array(45)].map((_,i)=>i+1);
 function rnd(n){ const u=new Uint32Array(1); const lim=Math.floor(2**32/n)*n; let x; do{crypto.getRandomValues(u);x=u[0]}while(x>=lim); return x%n; }
-function pick(){ const a=[...Array(45)].map((_,i)=>i+1); for(let i=0;i<6;i++){const j=i+rnd(45-i);[a[i],a[j]]=[a[j],a[i]]} return a.slice(0,6).sort((x,y)=>x-y); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]} return a; }
+function nCr(n,r){ let v=1; for(let i=0;i<r;i++) v=v*(n-i)/(i+1); return Math.round(v); }
+// 고정 번호(fixed)에 나머지를 무작위로 채운 6개 조합
+function draw(fixed){
+  const pool=ALL.filter(x=>!fixed.includes(x)), need=6-fixed.length;
+  for(let i=0;i<need;i++){ const j=i+rnd(pool.length-i); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+  return [...fixed,...pool.slice(0,need)].sort((x,y)=>x-y);
+}
 function runlen(c){ let m=1,r=1; for(let i=1;i<6;i++){ r = c[i]-c[i-1]===1 ? r+1 : 1; m=Math.max(m,r);} return m; }
 const score = c => D.k*c.reduce((s,n)=>s+D.beta[n-1],0) + (runlen(c)>=3?runPen:0);
 const isAP = c => new Set(c.slice(1).map((v,i)=>v-c[i])).size===1;
 // 기준 분포: 무작위 조합 10만 개
 const REF = []; let meanExp=0;
-for(let i=0;i<100000;i++){ const s=score(pick()); REF.push(s); meanExp+=Math.exp(s); }
+for(let i=0;i<100000;i++){ const s=score(draw([])); REF.push(s); meanExp+=Math.exp(s); }
 REF.sort((a,b)=>a-b); meanExp/=REF.length;
 function pct(s){ let lo=0,hi=REF.length; while(lo<hi){const m=(lo+hi)>>1; REF[m]<s?lo=m+1:hi=m;} return lo/REF.length; }
 const CUT = REF[Math.floor(REF.length*0.2)];
 
-let mode='smart', last=[];
-function generate(){
-  const n=+$('#cnt').value, out=[], seen=new Set();
-  while(out.length<n){
-    const c=pick(), key=c.join(',');
-    if(seen.has(key)) continue;
-    if(mode==='smart' && (score(c)>CUT || isAP(c) || PAST.has(key))) continue;
-    seen.add(key); out.push(c);
+function makeGames(n, mode, fixed){
+  const total=nCr(45-fixed.length, 6-fixed.length), want=Math.min(n,total), out=[], seen=new Set();
+  if(mode==='random'){
+    while(out.length<want){ const c=draw(fixed), k=c.join(','); if(!seen.has(k)){ seen.add(k); out.push(c); } }
+    return out;
   }
-  last=out;
-  $('#games').innerHTML = out.map((c,i)=>{
+  if(!fixed.length){
+    while(out.length<want){
+      const c=draw(fixed), k=c.join(',');
+      if(seen.has(k) || score(c)>CUT || isAP(c) || PAST.has(k)) continue;
+      seen.add(k); out.push(c);
+    }
+    return out;
+  }
+  // 고정 번호가 있으면 후보를 모아 그중 덜 인기 있는 20%에서 고름
+  const cand=new Map(), tries=Math.min(6000, total*6);
+  for(let t=0; t<tries && cand.size<Math.min(total,3000); t++){
+    const c=draw(fixed), k=c.join(',');
+    if(!cand.has(k) && !isAP(c) && !PAST.has(k)) cand.set(k,c);
+  }
+  const sorted=[...cand.values()].sort((a,b)=>score(a)-score(b));
+  return shuffle(sorted.slice(0, Math.max(want, Math.ceil(sorted.length*0.2)))).slice(0,want);
+}
+
+function renderGames(el, list, fixed=[]){
+  const mine=new Set(fixed);
+  el.innerHTML = list.map((c,i)=>{
     const s=score(c), m=Math.exp(s)/meanExp;
-    return `<div class="game"><span class="tag">${'ABCDEFGHIJ'[i]}</span>${balls(c)}
+    const bs=`<div class="balls">${c.map((n,j)=>`<span class="ball ${ballCls(n)}${mine.has(n)?' mine':''}" style="--i:${j}">${n}</span>`).join('')}</div>`;
+    return `<div class="game"><span class="tag">${'ABCDEFGHIJ'[i]}</span>${bs}
       <span class="meta"><span class="chip">인기도 하위 <b>${Math.max(1,Math.round(pct(s)*100))}%</b></span><span class="chip">공동당첨 예상 <b>${m.toFixed(2)}배</b></span></span></div>`;
   }).join('');
 }
-document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
-  mode=b.dataset.mode; document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b)); setModeNote(); generate();
+
+const state={ gen:{mode:'smart',cnt:5,last:[]}, semi:{mode:'smart',cnt:5,last:[]} };
+const picked=new Set();
+
+function runGen(){ const st=state.gen; st.last=makeGames(st.cnt, st.mode, []); renderGames($('#games'), st.last); }
+function runSemi(){
+  if(!picked.size) return;
+  const st=state.semi, fx=[...picked].sort((a,b)=>a-b);
+  st.last=makeGames(st.cnt, st.mode, fx); renderGames($('#gamesSemi'), st.last, fx);
+}
+document.querySelectorAll('.seg[data-group]').forEach(g=>{
+  g.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    const st=state[g.dataset.scope], key=g.dataset.group;
+    st[key] = key==='cnt' ? +b.dataset.v : b.dataset.v;
+    g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b));
+    if(g.dataset.scope==='gen'){ setModeNote(); runGen(); } else runSemi();
+  });
 });
 function setModeNote(){
-  $('#modeNote').innerHTML = mode==='smart'
+  $('#modeNote').innerHTML = state.gen.mode==='smart'
     ? `모든 조합의 1등 확률은 똑같이 1/8,145,060입니다. 이 모드는 무작위로 뽑되 <b>사람들이 덜 고르는 하위 20% 조합</b>만 남깁니다(등차수열·역대 1등 조합 제외). 당첨되면 나눠 가질 사람이 평균보다 적을 것으로 추정되어, 1인당 수령액 기대치가 약 <b>${Math.round((D.gain['0.2']-1)*100)}%</b> 높습니다.`
     : `필터 없이 45개 중 6개를 균등하게 뽑습니다. 자동 구매와 같은 방식입니다.`;
 }
-$('#go').onclick=generate;
-$('#copy').onclick=()=>{
-  const text=last.map((c,i)=>'ABCDEFGHIJ'[i]+' '+c.join(' ')).join('\n');
-  const done=msg=>{ $('#copy').textContent=msg; setTimeout(()=>$('#copy').textContent='COPY',1400); };
-  const fallback=()=>{ const t=document.createElement('textarea'); t.value=text; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select();
-    let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} t.remove(); done(ok?'COPIED':'FAILED'); };
-  if(navigator.clipboard?.writeText) navigator.clipboard.writeText(text).then(()=>done('COPIED'),fallback); else fallback();
+
+// 반자동 번호판
+const MAXPICK=5;
+$('#picker').innerHTML = ALL.map(n=>`<button type="button" class="pk ${ballCls(n)}" data-n="${n}" aria-pressed="false" aria-label="${n}번">${n}</button>`).join('');
+function syncPicker(){
+  const full=picked.size>=MAXPICK;
+  document.querySelectorAll('.pk').forEach(b=>{
+    const on=picked.has(+b.dataset.n);
+    b.setAttribute('aria-pressed', on);
+    b.classList.toggle('off', full && !on);
+  });
+  $('#pickCount').innerHTML = `고른 번호 <span>${picked.size}</span> / ${MAXPICK}`;
+  const go=$('#goSemi');
+  go.disabled=!picked.size;
+  go.textContent = picked.size ? `${picked.size}개 고정하고 ${6-picked.size}개 채우기` : '번호를 먼저 골라주세요';
+  if(!picked.size){ state.semi.last=[]; $('#gamesSemi').innerHTML='<div class="empty">위에서 번호를 1개 이상 고르면 생성할 수 있어요.</div>'; }
+}
+$('#picker').onclick=e=>{
+  const b=e.target.closest('.pk'); if(!b) return;
+  const n=+b.dataset.n;
+  if(picked.has(n)) picked.delete(n); else if(picked.size<MAXPICK) picked.add(n); else return;
+  syncPicker();
 };
+$('#pickReset').onclick=()=>{ picked.clear(); syncPicker(); };
+$('#go').onclick=runGen;
+$('#goSemi').onclick=runSemi;
+
+function copyGames(btn, list){
+  if(!list.length) return;
+  const label=btn.textContent, text=list.map((c,i)=>'ABCDEFGHIJ'[i]+' '+c.join(' ')).join('\n');
+  const done=msg=>{ btn.textContent=msg; setTimeout(()=>btn.textContent=label,1400); };
+  const fallback=()=>{ const t=document.createElement('textarea'); t.value=text; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select();
+    let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} t.remove(); done(ok?'복사됨':'복사 실패'); };
+  if(navigator.clipboard?.writeText) navigator.clipboard.writeText(text).then(()=>done('복사됨'),fallback); else fallback();
+}
+$('#copy').onclick=()=>copyGames($('#copy'), state.gen.last);
+$('#copySemi').onclick=()=>copyGames($('#copySemi'), state.semi.last);
 
 /* ---------- 탭 ---------- */
+const TABS=['gen','semi','why'];
 function showTab(id){
-  ['gen','why'].forEach(k=>{ $('#'+k).hidden = k!==id; $('#tab-'+k).setAttribute('aria-selected', k===id); });
+  TABS.forEach(k=>{ $('#'+k).hidden = k!==id; $('#tab-'+k).setAttribute('aria-selected', k===id); });
   hideTip(); scrollTo(0,0);
-  if(location.hash.slice(1)!==id) history.replaceState(null,'',id==='gen'?location.pathname:'#'+id);
+  try{ if(location.hash.slice(1)!==id) history.replaceState(null,'',id==='gen'?location.pathname:'#'+id); }catch(e){}
 }
-$('#tab-gen').onclick=()=>showTab('gen');
-$('#tab-why').onclick=()=>showTab('why');
+TABS.forEach(k=>$('#tab-'+k).onclick=()=>showTab(k));
 
 /* ---------- 차트 ---------- */
 const tip=$('#tip');
@@ -384,15 +496,12 @@ function line(el, xs, ys, {h=170, tipf, fmtY=v=>v}){
 
 /* ---------- 본문 채우기 ---------- */
 const L=D.last;
-$('#sub').innerHTML=`${D.next_ep}회 · ${D.next_date.replaceAll('-','.')}(토) 추첨`;
-$('#brandSub').textContent=`NUMBER GENERATOR · ${D.N} DRAWS`;
-const MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-const nd=new Date(D.next_date+'T00:00:00');
-$('#eyebrow').textContent=`DRAW #${D.next_ep} · SAT ${MON[nd.getMonth()]} ${nd.getDate()}, ${nd.getFullYear()}`;
-$('#ticketNo').textContent=`NO. ${D.next_ep}-${String(Math.floor(Math.random()*9000)+1000)}`;
-$('#lastEp').textContent=`#${L.ep} · ${ymd(L.date)}`;
-$('#lastBalls').innerHTML=balls(L.nums)+`<div class="bonus note">보너스 ${balls([L.bonus],true)}</div>`;
-$('#lastNote').innerHTML=`1등 ${L.w}명 · 1인당 ${eok(L.amt)} (자동 ${L.auto} · 수동 ${L.manual} · 반자동 ${L.semi})`;
+$('#sub').textContent=`${D.next_ep}회 · ${+D.next_date.slice(5,7)}월 ${+D.next_date.slice(8)}일(토) 추첨`;
+const drawAt=new Date(D.next_date+'T20:35:00+09:00'), left=drawAt-new Date();
+$('#dday').textContent = left<=0 ? '추첨 완료' : left<864e5 ? `추첨까지 ${Math.ceil(left/36e5)}시간` : `D-${Math.ceil(left/864e5)}`;
+$('#lastEp').textContent=`${L.ep}회 · ${ymd(L.date)}`;
+$('#lastBalls').innerHTML=balls(L.nums)+`<span class="plus">+</span>`+balls([L.bonus]);
+$('#lastNote').innerHTML=`1등 ${L.w}명 · 1인당 ${eok(L.amt)} · 자동 ${L.auto} · 수동 ${L.manual} · 반자동 ${L.semi}`;
 const fmin=Math.min(...D.freq), fmax=Math.max(...D.freq);
 $('#v1').textContent=`45개 번호 출현 횟수 차이는 무작위 오차 범위(p=${D.chi_p}). 핫·콜드 번호 전략도 랜덤과 같은 0.8개 적중.`;
 $('#v2').textContent=`사람들이 몰리는 번호가 나온 회차에 1등이 더 많이 나옴(표본 외 검증 p=${D.oos_p}). 비인기 조합은 1인당 수령액 기대치가 약 ${Math.round((D.gain['0.2']-1)*100)}% 높음.`;
@@ -417,8 +526,8 @@ line($('#yA'), yr.map(r=>r.y), yr.map(r=>r.amt), {tipf:i=>`${yr[i].y}년 · 1인
 const ta=D.top_amt[0], la=D.low_amt[0];
 $('#amtNote').textContent=`2005년 이후 1인당 최고 ${eok(ta.amt)}(${ta.ep}회, ${ta.w}명), 최저 ${eok(la.amt)}(${la.ep}회, ${la.w}명). 2003년 초기는 이월이 쌓여 1인당 100억대가 나왔으나, 판매가 1,000원으로 바뀐 뒤 20억대로 안정됐습니다.`;
 $('#method').innerHTML=`데이터: 동행복권 회차별 당첨결과 ${D.N}회 전체(당첨번호·등위별 당첨자 수·당첨금·판매금액·1등 자동/수동 구분). 판매 게임 수 = 판매금액 ÷ 1,000원. 번호별 인기도 = log(4등 당첨자 수 ÷ 기대 당첨자 수)를 45개 번호 포함 여부로 회귀한 계수. 1등 효과 = 1등 당첨자 수를 음이항 회귀(기대 당첨자 수 오프셋)로 추정. 과적합을 막기 위해 짝수 회차로 인기도를 학습하고 홀수 회차 1등 당첨자 수로 검증한 계수(${D.k.toFixed(2)})를 생성기에 사용했습니다(순위상관 ${D.oos_rho}, p=${D.oos_p}). 3연속 번호 가산은 ${D.run_pen>0?'+'+D.run_pen.toFixed(2)+'(p='+D.run_p+')':'미적용'}. 생성기 난수는 브라우저 암호학적 난수(crypto.getRandomValues)를 씁니다.`;
-setModeNote(); generate();
-if(location.hash==='#why') showTab('why');
+setModeNote(); runGen(); syncPicker();
+if(TABS.includes(location.hash.slice(1))) showTab(location.hash.slice(1));
 </script>
 </body>
 </html>
