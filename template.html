@@ -99,6 +99,12 @@ button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .small{gap:4px}
 .meta{grid-column:2;font-size:11.5px;line-height:1.4;color:var(--muted)}
 .meta b{color:var(--ink2);font-weight:700;font-family:var(--num)}
+.meta sup,.foot sup{font-size:9.5px;font-weight:700;color:var(--accentText);margin-left:1px;vertical-align:4px;line-height:0}
+.foot{display:grid;gap:9px;margin:14px 4px 0;font-size:12px;line-height:1.7;color:var(--ink2)}
+.foot p{margin:0;padding-left:15px;text-indent:-15px}
+.foot p b{color:var(--ink);font-weight:700}
+.foot sup{vertical-align:3px;margin:0 4px 0 0}
+.foot .warn{padding:8px 11px;text-indent:0;background:var(--fill);border-radius:10px}
 .chip{font-size:12px;color:var(--ink2);background:var(--fill);border-radius:7px;padding:2px 8px;white-space:nowrap}
 .chip b{color:var(--ink);font-weight:700;font-family:var(--num)}
 .empty{padding:22px 4px 8px;text-align:center;color:var(--muted);font-size:14px}
@@ -200,6 +206,7 @@ td.l{text-align:left}
     </div>
     <div class="games" id="games"></div>
   </div>
+  <div class="foot"></div>
   <p class="note" id="modeNote" style="margin:14px 4px 0"></p>
 
   <div class="stack">
@@ -215,14 +222,6 @@ td.l{text-align:left}
         <div>
           <dt>A · B · C · D · E</dt>
           <dd>로또 용지 한 장의 게임 칸(A~E)과 같은 이름입니다. 한 줄이 1,000원짜리 1게임이고, 다섯 줄은 서로 다른 조합일 뿐 순서나 등급 차이는 없습니다. A가 더 좋은 번호라는 뜻이 아닙니다.</dd>
-        </div>
-        <div>
-          <dt><span class="chip">공동당첨 예상 <b>0.93배</b></span></dt>
-          <dd>이 조합으로 1등이 됐을 때, 같은 번호로 함께 1등이 될 사람이 평균적인 조합보다 몇 배일지 추정한 값입니다. 0.93배면 나눠 가질 사람이 평균보다 약 7% 적어서, 1인당 받는 금액이 약 8% 많아집니다. 1등이 될 확률은 어떤 조합이든 1/8,145,060으로 같습니다.</dd>
-        </div>
-        <div>
-          <dt><span class="chip">인기도 하위 <b>12%</b></span></dt>
-          <dd>무작위 조합 10만 개와 비교했을 때 사람들이 덜 고르는 쪽 몇 % 안에 드는지입니다. 숫자가 작을수록 남들과 겹칠 가능성이 낮습니다. 비인기 조합 모드는 하위 20% 안의 조합만 보여줍니다.</dd>
         </div>
         <div>
           <dt>반자동</dt>
@@ -263,6 +262,7 @@ td.l{text-align:left}
     </div>
     <div class="games" id="gamesSemi"><div class="empty">위에서 번호를 1개 이상 고르면 생성할 수 있어요.</div></div>
   </div>
+  <div class="foot"></div>
   <p class="note" style="margin:14px 4px 0"><span class="mykey"><i></i>테두리가 있는 공이 직접 고른 번호입니다.</span> 비인기 조합 모드는 고른 번호를 넣은 조합 중에서 사람들이 덜 고르는 하위 20%로 나머지를 채웁니다. 고른 번호 자체가 인기 번호라면 공동당첨 예상 배수가 1배보다 높게 나올 수 있습니다.</p>
 </section>
 
@@ -366,7 +366,7 @@ function renderGames(el, list, fixed=[]){
     const s=score(c), m=Math.exp(s)/meanExp;
     const bs=`<div class="balls">${c.map((n,j)=>`<span class="ball ${ballCls(n)}${mine.has(n)?' mine':''}" style="--i:${j}">${n}</span>`).join('')}</div>`;
     return `<div class="game"><span class="tag">${'ABCDEFGHIJ'[i]}</span>${bs}
-      <span class="meta">인기도 하위 <b>${Math.max(1,Math.round(pct(s)*100))}%</b> · 공동당첨 예상 <b>${m.toFixed(2)}배</b></span></div>`;
+      <span class="meta">인기도 하위 <b>${Math.max(1,Math.round(pct(s)*100))}%</b><sup>1</sup> · 공동당첨 예상 <b>${m.toFixed(2)}배</b><sup>2</sup></span></div>`;
   }).join('');
 }
 
@@ -516,6 +516,11 @@ $('#btTable').innerHTML=`<tr><th>기준 기간</th><th>핫 6개 평균 적중</t
 $('#repNote').textContent=`직전 회차 번호가 다음 회차에 다시 나오는 개수도 평균 ${D.repeat_prev}개로 랜덤 기대값 0.80개와 같습니다. 과거 결과는 다음 결과에 영향을 주지 않습니다.`;
 const rankBy=dir=>D.beta.map((b,i)=>[b,i+1]).sort((a,b)=>dir*(a[0]-b[0])).slice(0,5).map(x=>x[1]).join('·');
 $('#popNote').innerHTML=`4등(4개 일치)은 회차마다 십수만 명이 나와, 판매량 대비 당첨자가 많으면 "그 번호를 고른 사람이 많다"는 뜻입니다. 100회 이후 ${D.N-99}회차의 4등 당첨자 수로 번호별 인기도를 추정했습니다. 막대는 그 번호가 당첨번호에 포함될 때 1등 공동당첨자 수의 증감(추정)입니다. 가장 인기 있는 번호는 <b>${rankBy(-1)}</b>, 가장 덜 고르는 번호는 <b>${rankBy(1)}</b>입니다. 생일로 쓰이는 1~31이 대체로 인기이고, 40번대는 덜 고릅니다.`;
+const ex=D.many[0];
+const FOOT=`<p><sup>1</sup><b>인기도 하위 N%</b> · 사람들이 이 조합을 얼마나 자주 고르는지 나타낸 순위입니다. 무작위 조합 10만 개를 인기 순으로 줄 세웠을 때, 이 조합이 덜 고르는 쪽 몇 % 안에 드는지를 뜻합니다. 하위 5%면 100개 중 95개보다 덜 고르는 조합이라 남과 번호가 겹칠 가능성이 낮습니다. 인기도는 과거 ${D.N-99}회차의 4등 당첨자 수로 번호마다 추정했습니다. 생일에 쓰이는 1~31이 대체로 인기이고, 특히 ${rankBy(-1)}번이 많이, ${rankBy(1)}번이 적게 선택됩니다. 비인기 조합 모드는 하위 20% 안의 조합만 보여줍니다.</p>
+<p><sup>2</sup><b>공동당첨 예상 N배</b> · 이 번호로 1등이 됐을 때, 같은 번호로 함께 1등이 될 사람 수가 평균적인 조합의 몇 배일지 추정한 값입니다. 1등 상금은 당첨자끼리 똑같이 나누기 때문에 이 값이 작을수록 1인당 받는 돈이 커집니다. 1.00배는 평균이고, 0.90배면 함께 당첨될 사람이 약 10% 적어 1인당 상금이 약 11% 많습니다. 1.10배면 반대로 약 9% 줄어듭니다. 실제로 ${ex.ep}회(${ex.nums.join('·')})는 사람들이 많이 고르는 조합이라 ${ex.w}명이 1등을 나눠 1인당 ${eok(ex.amt)}을 받았습니다. 최근 5년 1등 평균은 ${D.avg_amt_recent}억입니다.</p>
+<p class="warn">두 값 모두 <b>당첨 확률과는 관계가 없습니다.</b> 어떤 조합이든 1등 확률은 1/8,145,060으로 같고, 이 값들은 당첨됐을 때 받는 금액에만 영향을 줍니다.</p>`;
+document.querySelectorAll('.foot').forEach(el=>el.innerHTML=FOOT);
 const popPct=D.beta.map(b=>(Math.exp(D.k*b)-1)*100);
 bars($('#popChart'), popPct, {color:v=>v>=0?'var(--s2)':'var(--s1)', fmtY:v=>(v>0?'+':'')+v+'%',
   tipf:i=>`${i+1}번 · 1등 공동당첨자 ${(popPct[i]>0?'+':'')}${popPct[i].toFixed(1)}%`});
