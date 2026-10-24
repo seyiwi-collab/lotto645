@@ -75,7 +75,7 @@ p{margin:6px 0}
 .seg button{border:0;background:transparent;color:var(--ink2);padding:7px 13px;font:inherit;font-size:13.5px;font-weight:600;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(29,35,51,.12)}
 select{font:inherit;font-size:13.5px;font-weight:600;padding:8px 12px;border:0;border-radius:999px;background:var(--page);color:var(--ink)}
-.actions{display:flex;gap:8px;margin-top:16px}
+.actions{display:flex;gap:8px;margin:12px 0 4px}
 .go{flex:1;border:0;background:var(--btn);color:var(--btnInk);font-family:var(--display);font-size:19px;padding:13px 18px;border-radius:999px;cursor:pointer;box-shadow:0 6px 16px color-mix(in srgb,var(--btn) 35%,transparent);transition:transform .15s}
 .go:active{transform:scale(.97)}
 .ghost{border:0;background:var(--accent-soft);color:var(--accent-ink);font:inherit;font-weight:600;font-size:14px;padding:10px 18px;border-radius:999px;cursor:pointer}
@@ -175,11 +175,11 @@ td.l{text-align:left}
         <option value="1">1게임</option><option value="5" selected>5게임</option><option value="10">10게임</option>
       </select>
     </div>
-    <div class="games" id="games"></div>
     <div class="actions">
-      <button class="go" id="go" type="button">다시 뽑기</button>
+      <button class="go" id="go" type="button">번호 생성하기</button>
       <button class="ghost" id="copy" type="button">복사</button>
     </div>
+    <div class="games" id="games"></div>
   </div>
   <p class="note" id="modeNote" style="margin:14px 4px 0"></p>
 
