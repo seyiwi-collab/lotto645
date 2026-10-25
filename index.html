@@ -91,6 +91,11 @@ button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .chip{font-size:12px;color:var(--ink2);background:var(--fill);border-radius:7px;padding:2px 8px;white-space:nowrap}
 .chip b{color:var(--ink);font-weight:700;font-family:var(--num)}
 .empty{padding:22px 4px 8px;text-align:center;color:var(--muted);font-size:14px}
+.hotlist{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px 6px;justify-items:center}
+.hotitem{display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--num);font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.hotitem .ball{width:34px;height:34px;font-size:14px}
+.funbox{margin:14px 4px 0;padding:10px 12px;background:var(--fill);border-radius:12px;font-size:12px;line-height:1.7;color:var(--ink2)}
+.funbox b{color:var(--ink)}
 
 /* 반자동 번호판 */
 .picker{display:grid;grid-template-columns:repeat(7,minmax(0,46px));justify-content:space-between;row-gap:10px;column-gap:6px;margin-top:4px}
@@ -160,6 +165,7 @@ td.l{text-align:left}
     <nav class="tabs" role="tablist" aria-label="화면">
       <button role="tab" id="tab-gen" aria-controls="gen" aria-selected="true" type="button">자동</button>
       <button role="tab" id="tab-semi" aria-controls="semi" aria-selected="false" type="button">반자동</button>
+      <button role="tab" id="tab-hot" aria-controls="hot" aria-selected="false" type="button">핫번호</button>
       <button role="tab" id="tab-why" aria-controls="why" aria-selected="false" type="button">분석</button>
     </nav>
   </div>
@@ -247,6 +253,37 @@ td.l{text-align:left}
   </div>
   <div class="foot"></div>
   <p class="note" style="margin:14px 4px 0"><span class="mykey"><i></i>테두리가 있는 공이 직접 고른 번호입니다.</span> 비인기 조합 모드는 고른 번호를 넣은 조합 중에서 사람들이 덜 고르는 하위 20%로 나머지를 채웁니다. 고른 번호 자체가 인기 번호라면 공동당첨 예상 배수가 1배보다 높게 나올 수 있습니다.</p>
+</section>
+
+<section id="hot" role="tabpanel" aria-labelledby="tab-hot" hidden>
+  <div class="hero">
+    <div><h1>많이 나온 번호</h1><p class="sub">역대 당첨번호에 자주 나온 번호 위주로 뽑아요. 재미로 보세요.</p></div>
+  </div>
+  <div class="card">
+    <div class="drawinfo"><span id="hotTitle"></span><b id="hotRange"></b></div>
+    <div class="hotlist" id="hotList"></div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="controls">
+      <div class="seg" role="group" aria-label="기준 기간" data-group="period" data-scope="hot">
+        <button type="button" data-v="all" aria-pressed="true">전체</button>
+        <button type="button" data-v="100" aria-pressed="false">최근 100회</button>
+        <button type="button" data-v="30" aria-pressed="false">최근 30회</button>
+      </div>
+      <div class="seg" role="group" aria-label="게임 수" data-group="cnt" data-scope="hot">
+        <button type="button" data-v="1" aria-pressed="false">1</button>
+        <button type="button" data-v="5" aria-pressed="true">5</button>
+        <button type="button" data-v="10" aria-pressed="false">10게임</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="ghost" id="copyHot" type="button">복사</button>
+      <button class="go" id="goHot" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.9L19 9.5l-4.4 3 1.4 5.2L12 14.8 8 17.7l1.4-5.2L5 9.5l5.2-1.6z"/></svg><span>핫번호 생성하기</span></button>
+    </div>
+    <div class="games" id="gamesHot"></div>
+  </div>
+  <p class="funbox" id="hotNote"></p>
 </section>
 
 <section id="why" role="tabpanel" aria-labelledby="tab-why" hidden>
@@ -343,17 +380,17 @@ function makeGames(n, mode, fixed){
   return shuffle(sorted.slice(0, Math.max(want, Math.ceil(sorted.length*0.2)))).slice(0,want);
 }
 
-function renderGames(el, list, fixed=[]){
+function renderGames(el, list, fixed=[], metaFn){
   const mine=new Set(fixed);
   el.innerHTML = list.map((c,i)=>{
     const s=score(c), m=Math.exp(s)/meanExp;
     const bs=`<div class="balls">${c.map((n,j)=>`<span class="ball ${ballCls(n)}${mine.has(n)?' mine':''}" style="--i:${j}">${n}</span>`).join('')}</div>`;
     return `<div class="game"><span class="tag">${'ABCDEFGHIJ'[i]}</span>${bs}
-      <span class="meta">인기도 하위 <b>${Math.max(1,Math.round(pct(s)*100))}%</b><sup>1</sup> · 공동당첨 예상 <b>${m.toFixed(2)}배</b><sup>2</sup></span></div>`;
+      <span class="meta">${metaFn ? metaFn(c,m) : `인기도 하위 <b>${Math.max(1,Math.round(pct(s)*100))}%</b><sup>1</sup> · 공동당첨 예상 <b>${m.toFixed(2)}배</b><sup>2</sup>`}</span></div>`;
   }).join('');
 }
 
-const state={ gen:{mode:'smart',cnt:5,last:[]}, semi:{mode:'smart',cnt:5,last:[]} };
+const state={ gen:{mode:'smart',cnt:5,last:[]}, semi:{mode:'smart',cnt:5,last:[]}, hot:{period:'all',cnt:5,last:[]} };
 const picked=new Set();
 
 function runGen(){ const st=state.gen; st.last=makeGames(st.cnt, st.mode, []); renderGames($('#games'), st.last); }
@@ -367,7 +404,7 @@ document.querySelectorAll('.seg[data-group]').forEach(g=>{
     const st=state[g.dataset.scope], key=g.dataset.group;
     st[key] = key==='cnt' ? +b.dataset.v : b.dataset.v;
     g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b));
-    if(g.dataset.scope==='gen'){ setModeNote(); runGen(); } else runSemi();
+    ({gen:()=>{ setModeNote(); runGen(); }, semi:runSemi, hot:runHot})[g.dataset.scope]();
   });
 });
 function setModeNote(){
@@ -413,8 +450,41 @@ function copyGames(btn, list){
 $('#copy').onclick=()=>copyGames($('#copy'), state.gen.last);
 $('#copySemi').onclick=()=>copyGames($('#copySemi'), state.semi.last);
 
+// 핫번호: 기간 내 출현 상위 15개 안에서, 많이 나온 번호일수록 자주 뽑히게
+const HOTPOOL=15;
+function hotCounts(period){
+  const list = period==='all' ? D.past : D.past.slice(-(+period));
+  const c=Array(46).fill(0);
+  list.forEach(k=>k.split(',').forEach(n=>c[+n]++));
+  return {c, n:list.length, from:D.N-list.length+1};
+}
+function runHot(){
+  const st=state.hot, {c,n,from}=hotCounts(st.period);
+  const rank=ALL.slice().sort((a,b)=>c[b]-c[a]||a-b), pool=rank.slice(0,HOTPOOL);
+  const out=[], seen=new Set();
+  for(let guard=0; out.length<st.cnt && guard<3000; guard++){
+    const p=pool.slice(), w=p.map(x=>c[x]+1), pick=[];
+    for(let i=0;i<6;i++){
+      let r=rnd(1e9)/1e9*w.reduce((a,b)=>a+b,0), j=0;
+      while(j<w.length-1 && r>=w[j]){ r-=w[j]; j++; }
+      pick.push(p[j]); p.splice(j,1); w.splice(j,1);
+    }
+    pick.sort((a,b)=>a-b);
+    const k=pick.join(','); if(!seen.has(k)){ seen.add(k); out.push(pick); }
+  }
+  st.last=out;
+  const avg=n*6/45;
+  renderGames($('#gamesHot'), out, [], (cc,m)=>`평균 출현 <b>${(cc.reduce((s,x)=>s+c[x],0)/6).toFixed(1)}</b>회 (기대 ${avg.toFixed(1)}회) · 공동당첨 예상 <b>${m.toFixed(2)}배</b>`);
+  const label = st.period==='all' ? '전체 기간' : `최근 ${n}회`;
+  $('#hotTitle').textContent=`${label} 자주 나온 번호 TOP 10`;
+  $('#hotRange').textContent=`${from}~${D.N}회`;
+  $('#hotList').innerHTML=rank.slice(0,10).map(x=>`<div class="hotitem"><span class="ball ${ballCls(x)}">${x}</span>${c[x]}회</div>`).join('');
+}
+$('#goHot').onclick=runHot;
+$('#copyHot').onclick=()=>copyGames($('#copyHot'), state.hot.last);
+
 /* ---------- 탭 ---------- */
-const TABS=['gen','semi','why'];
+const TABS=['gen','semi','hot','why'];
 function showTab(id){
   TABS.forEach(k=>{ $('#'+k).hidden = k!==id; $('#tab-'+k).setAttribute('aria-selected', k===id); });
   hideTip(); scrollTo(0,0);
@@ -504,6 +574,8 @@ const FOOT=`<p><sup>1</sup><b>인기도 하위 N%</b> · 사람들이 이 조합
 <p><sup>2</sup><b>공동당첨 예상 N배</b> · 이 번호로 1등이 됐을 때, 같은 번호로 함께 1등이 될 사람 수가 평균적인 조합의 몇 배일지 추정한 값입니다. 1등 상금은 당첨자끼리 똑같이 나누기 때문에 이 값이 작을수록 1인당 받는 돈이 커집니다. 1.00배는 평균이고, 0.90배면 함께 당첨될 사람이 약 10% 적어 1인당 상금이 약 11% 많습니다. 1.10배면 반대로 약 9% 줄어듭니다. 실제로 ${ex.ep}회(${ex.nums.join('·')})는 사람들이 많이 고르는 조합이라 ${ex.w}명이 1등을 나눠 1인당 ${eok(ex.amt)}을 받았습니다. 최근 5년 1등 평균은 ${D.avg_amt_recent}억입니다.</p>
 <p class="warn">두 값 모두 <b>당첨 확률과는 관계가 없습니다.</b> 어떤 조합이든 1등 확률은 1/8,145,060으로 같고, 이 값들은 당첨됐을 때 받는 금액에만 영향을 줍니다.</p>`;
 document.querySelectorAll('.foot').forEach(el=>el.innerHTML=FOOT);
+const bt=D.backtest.map(b=>b.hot);
+$('#hotNote').innerHTML=`<b>재미용 모드예요.</b> 고른 기간에 가장 많이 나온 15개 번호 안에서, 많이 나온 번호일수록 더 자주 뽑히게 골라요. 하지만 실제 당첨 확률은 다른 번호와 똑같아요. 역대 기록으로 시험해 보면, 매 회차 직전까지 가장 많이 나온 6개를 골랐을 때 평균 적중은 ${Math.min(...bt).toFixed(2)}~${Math.max(...bt).toFixed(2)}개로 아무렇게나 고른 6개(0.80개)와 같았어요. 공동당첨 예상이 1배보다 높으면 남들도 많이 고르는 번호라, 당첨돼도 나눠 가질 사람이 많다는 뜻이에요.`;
 const popPct=D.beta.map(b=>(Math.exp(D.k*b)-1)*100);
 bars($('#popChart'), popPct, {color:v=>v>=0?'var(--s2)':'var(--s1)', fmtY:v=>(v>0?'+':'')+v+'%',
   tipf:i=>`${i+1}번 · 1등 공동당첨자 ${(popPct[i]>0?'+':'')}${popPct[i].toFixed(1)}%`});
@@ -517,7 +589,7 @@ line($('#yA'), yr.map(r=>r.y), yr.map(r=>r.amt), {tipf:i=>`${yr[i].y}년 · 1인
 const ta=D.top_amt[0], la=D.low_amt[0];
 $('#amtNote').textContent=`2005년 이후 1인당 최고 ${eok(ta.amt)}(${ta.ep}회, ${ta.w}명), 최저 ${eok(la.amt)}(${la.ep}회, ${la.w}명). 2003년 초기는 이월이 쌓여 1인당 100억대가 나왔으나, 판매가 1,000원으로 바뀐 뒤 20억대로 안정됐습니다.`;
 $('#method').innerHTML=`데이터: 동행복권 회차별 당첨결과 ${D.N}회 전체(당첨번호·등위별 당첨자 수·당첨금·판매금액·1등 자동/수동 구분). 판매 게임 수 = 판매금액 ÷ 1,000원. 번호별 인기도 = log(4등 당첨자 수 ÷ 기대 당첨자 수)를 45개 번호 포함 여부로 회귀한 계수. 1등 효과 = 1등 당첨자 수를 음이항 회귀(기대 당첨자 수 오프셋)로 추정. 과적합을 막기 위해 짝수 회차로 인기도를 학습하고 홀수 회차 1등 당첨자 수로 검증한 계수(${D.k.toFixed(2)})를 생성기에 사용했습니다(순위상관 ${D.oos_rho}, p=${D.oos_p}). 3연속 번호 가산은 ${D.run_pen>0?'+'+D.run_pen.toFixed(2)+'(p='+D.run_p+')':'미적용'}. 생성기 난수는 브라우저 암호학적 난수(crypto.getRandomValues)를 씁니다.`;
-setModeNote(); runGen(); syncPicker();
+setModeNote(); runGen(); syncPicker(); runHot();
 if(TABS.includes(location.hash.slice(1))) showTab(location.hash.slice(1));
 </script>
 </body>
